@@ -4,6 +4,8 @@ A focused study task list for organizing work, tracking progress, and keeping ta
 
 **Student:** [Dinah]
 
+[Open StudySprint](https://helpful-tartufo-bebdcf.netlify.app)
+
 ## Features
 
 - Add tasks with input validation
