@@ -79,6 +79,7 @@ const formMessage = document.querySelector("#form-message");
 const taskList = document.querySelector("#task-list");
 const taskCount = document.querySelector("#task-count");
 const emptyState = document.querySelector("#empty-state");
+const clearCompletedButton = document.querySelector('#clear-completed');
 
 // Draw the task list and count from the current state.
 function render() {
@@ -329,10 +330,17 @@ function handleFilterClick(event) {
   render();
 }
 
+// Remove completed tasks from state, then redraw the list.
+function clearCompleted() {
+  tasks = tasks.filter((task) => !task.completed);
+  render();
+}
+
 // Listen for form submissions, including pressing Enter.
 taskForm.addEventListener("submit", addTask);
 taskList.addEventListener("change", handleTaskChange);
 taskList.addEventListener("click", handleTaskClick);
 taskList.addEventListener('keydown', handleTaskKeydown);
 filterNav.addEventListener('click', handleFilterClick);
+clearCompletedButton.addEventListener('click', clearCompleted);
 render();
