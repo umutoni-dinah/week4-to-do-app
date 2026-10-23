@@ -70,7 +70,9 @@ document.querySelector("#app").innerHTML = `
 `;
 let tasks = [];
 let editingTaskId = null;
+let activeFilter = 'all';
 
+const filterNav = document.querySelector('nav[aria-label="Filter tasks"]');
 const taskForm = document.querySelector("#task-form");
 const taskInput = document.querySelector("#task-input");
 const formMessage = document.querySelector("#form-message");
@@ -81,8 +83,9 @@ const emptyState = document.querySelector("#empty-state");
 // Draw the task list and count from the current state.
 function render() {
   taskList.replaceChildren();
+  const visibleTasks = getVisibleTasks();
 
-  for (const task of tasks) {
+  for (const task of visibleTasks) {
     const item = document.createElement("li");
     item.className = "flex items-center gap-3 py-4";
 
@@ -137,7 +140,26 @@ function render() {
     taskList.append(item);
   }
 
-  emptyState.hidden = tasks.length > 0;
+  const baseClasses =
+  'rounded-full px-4 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600';
+
+for (const button of filterNav.querySelectorAll('[data-filter]')) {
+  const isSelected = button.dataset.filter === activeFilter;
+
+  button.setAttribute('aria-pressed', String(isSelected));
+  button.className = isSelected
+    ? `${baseClasses} bg-indigo-100 text-indigo-800`
+    : `${baseClasses} text-slate-600 hover:bg-slate-100`;
+}
+
+  emptyState.hidden = visibleTasks.length > 0;
+
+if (visibleTasks.length === 0) {
+  emptyState.textContent =
+    tasks.length === 0
+      ? 'A clear desk, a clear mind. Add your first study task to get started.'
+      : `No ${activeFilter} tasks right now.`;
+}
 
   const remaining = tasks.filter((task) => !task.completed).length;
   const noun = remaining === 1 ? "task" : "tasks";
@@ -278,9 +300,39 @@ function handleTaskKeydown(event) {
   render();
 }
 
+// Return tasks that match the selected filter.
+function getVisibleTasks() {
+  if (activeFilter === 'active') {
+    return tasks.filter((task) => !task.completed);
+  }
+
+  if (activeFilter === 'completed') {
+    return tasks.filter((task) => task.completed);
+  }
+
+  return tasks;
+}
+
+// Change the selected filter when a filter button is clicked.
+function handleFilterClick(event) {
+  if (!(event.target instanceof Element)) {
+    return;
+  }
+
+  const button = event.target.closest('[data-filter]');
+
+  if (!button) {
+    return;
+  }
+
+  activeFilter = button.dataset.filter;
+  render();
+}
+
 // Listen for form submissions, including pressing Enter.
 taskForm.addEventListener("submit", addTask);
 taskList.addEventListener("change", handleTaskChange);
 taskList.addEventListener("click", handleTaskClick);
 taskList.addEventListener('keydown', handleTaskKeydown);
+filterNav.addEventListener('click', handleFilterClick);
 render();
