@@ -34,3 +34,21 @@ Each task is stored as an object:
   text: "Review biology notes",
   completed: false
 }
+
+## Screenshots
+
+### Mobile
+
+![StudySprint on mobile](screenshots/mobile.png)
+
+### Desktop
+
+![StudySprint on desktop](screenshots/desktop.png)
+
+## Challenges and What I Learned
+I learned how to keep tasks in an array and update the page with a render() function.
+I used event delegation so task buttons work even when tasks are added later.
+I learned how to save tasks, the selected filter, and dark mode in localStorage.
+I used browser DevTools to check the app at mobile and desktop widths.
+During testing, I found that the light card gradient made text difficult to read in dark mode, so I adjusted the card’s dark-mode background.
+I also learned to use textContent so task text appears as plain text instead of being treated as HTML.
