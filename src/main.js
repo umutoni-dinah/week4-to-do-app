@@ -68,9 +68,11 @@ document.querySelector("#app").innerHTML = `
     </section>
   </main>
 `;
-let tasks = [];
+const TASKS_STORAGE_KEY = 'studySprint.tasks';
+const FILTER_STORAGE_KEY = 'studySprint.filter';
+let tasks = loadTasks();
 let editingTaskId = null;
-let activeFilter = 'all';
+let activeFilter = loadFilter();
 
 const filterNav = document.querySelector('nav[aria-label="Filter tasks"]');
 const taskForm = document.querySelector("#task-form");
@@ -80,6 +82,40 @@ const taskList = document.querySelector("#task-list");
 const taskCount = document.querySelector("#task-count");
 const emptyState = document.querySelector("#empty-state");
 const clearCompletedButton = document.querySelector('#clear-completed');
+
+// Load saved tasks, or use an empty array if nothing has been saved yet.
+function loadTasks() {
+  try {
+    const savedTasks = localStorage.getItem(TASKS_STORAGE_KEY);
+
+    if (savedTasks === null) {
+      return [];
+    }
+
+    const parsedTasks = JSON.parse(savedTasks);
+    return Array.isArray(parsedTasks) ? parsedTasks : [];
+  } catch {
+    return [];
+  }
+}
+
+// Save the current tasks in the browser.
+function saveTasks() {
+  localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
+}
+// Load the saved filter, or use All if it is missing or invalid.
+function loadFilter() {
+  const savedFilter = localStorage.getItem(FILTER_STORAGE_KEY);
+  const validFilters = ['all', 'active', 'completed'];
+
+  return validFilters.includes(savedFilter) ? savedFilter : 'all';
+}
+
+// Save the currently selected filter in the browser.
+function saveFilter() {
+  localStorage.setItem(FILTER_STORAGE_KEY, activeFilter);
+}
+
 
 // Draw the task list and count from the current state.
 function render() {
@@ -188,6 +224,7 @@ function addTask(event) {
     text,
     completed: false,
   });
+  saveTasks();
 
   formMessage.textContent = "";
   taskForm.reset();
@@ -212,6 +249,7 @@ function handleTaskChange(event) {
   }
 
   task.completed = checkbox.checked;
+  saveTasks()
   render();
 }
 
@@ -248,6 +286,7 @@ function handleTaskClick(event) {
   }
 
   tasks = tasks.filter((item) => item.id !== task.id);
+  saveTasks()
   render();
 }
 
@@ -298,6 +337,7 @@ function handleTaskKeydown(event) {
   task.text = text;
   editingTaskId = null;
   formMessage.textContent = '';
+  saveTasks()
   render();
 }
 
@@ -327,12 +367,14 @@ function handleFilterClick(event) {
   }
 
   activeFilter = button.dataset.filter;
+  saveFilter()
   render();
 }
 
 // Remove completed tasks from state, then redraw the list.
 function clearCompleted() {
   tasks = tasks.filter((task) => !task.completed);
+  saveTasks()
   render();
 }
 
