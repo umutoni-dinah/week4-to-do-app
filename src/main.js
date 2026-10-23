@@ -68,12 +68,14 @@ document.querySelector("#app").innerHTML = `
     </section>
   </main>
 `;
+const THEME_STORAGE_KEY = 'studySprint.darkMode';
 const TASKS_STORAGE_KEY = 'studySprint.tasks';
 const FILTER_STORAGE_KEY = 'studySprint.filter';
 let tasks = loadTasks();
 let editingTaskId = null;
 let activeFilter = loadFilter();
 let searchText = '';
+let isDarkMode = localStorage.getItem(THEME_STORAGE_KEY) === 'true';
 
 const filterNav = document.querySelector('nav[aria-label="Filter tasks"]');
 const taskForm = document.querySelector("#task-form");
@@ -84,6 +86,7 @@ const taskCount = document.querySelector("#task-count");
 const emptyState = document.querySelector("#empty-state");
 const clearCompletedButton = document.querySelector('#clear-completed');
 const searchInput = document.querySelector('#search-input');
+const themeToggle = document.querySelector('#theme-toggle');
 
 // Load saved tasks, or use an empty array if nothing has been saved yet.
 function loadTasks() {
@@ -372,6 +375,23 @@ function getVisibleTasks() {
   );
 }
 
+// Apply the current theme and update the toggle button.
+function applyTheme() {
+  document.documentElement.classList.toggle('dark', isDarkMode);
+
+  themeToggle.textContent = isDarkMode ? 'Light mode' : 'Dark mode';
+  themeToggle.setAttribute(
+    'aria-label',
+    isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'
+  );
+}
+
+// Toggle the theme and save the choice.
+function handleThemeToggle() {
+  isDarkMode = !isDarkMode;
+  localStorage.setItem(THEME_STORAGE_KEY, String(isDarkMode));
+  applyTheme();
+}
 // Change the selected filter when a filter button is clicked.
 function handleFilterClick(event) {
   if (!(event.target instanceof Element)) {
@@ -404,4 +424,6 @@ taskList.addEventListener('keydown', handleTaskKeydown);
 filterNav.addEventListener('click', handleFilterClick);
 clearCompletedButton.addEventListener('click', clearCompleted);
 searchInput.addEventListener('input', handleSearchInput);
+themeToggle.addEventListener('click', handleThemeToggle);
+applyTheme();
 render();

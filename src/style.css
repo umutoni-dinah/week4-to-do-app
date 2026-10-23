@@ -1,1 +1,64 @@
 @import "tailwindcss";
+html.dark {
+  color-scheme: dark;
+  background: #0f172a;
+}
+
+html.dark body {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+html.dark section[aria-labelledby="tasks-heading"] {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+html.dark h1,
+html.dark h2 {
+  color: #f8fafc;
+}
+
+html.dark input {
+  background-color: #0f172a;
+  border-color: #475569;
+  color: #f8fafc;
+}
+
+html.dark #task-list > li {
+  border-color: #334155;
+}
+
+html.dark #task-list span,
+html.dark #task-count,
+html.dark #empty-state,
+html.dark #clear-completed {
+  color: #cbd5e1;
+}
+
+html.dark #theme-toggle {
+  background-color: #1e293b;
+  border-color: #475569;
+  color: #f8fafc;
+}
+
+html.dark #form-message {
+  color: #fda4af;
+}
+
+html.dark [data-filter] {
+  color: #cbd5e1;
+}
+
+html.dark [data-filter][aria-pressed="true"] {
+  background-color: #312e81;
+  color: #e0e7ff;
+}
+
+html.dark [data-action="edit"] {
+  color: #a5b4fc;
+}
+
+html.dark [data-action="delete"] {
+  color: #fda4af;
+}
