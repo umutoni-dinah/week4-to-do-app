@@ -62,3 +62,41 @@ html.dark [data-action="edit"] {
 html.dark [data-action="delete"] {
   color: #fda4af;
 }
+:root {
+  background-color: #f3f0ff;
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse at top left, rgb(196 181 253 / 35%), transparent 45%),
+    radial-gradient(ellipse at bottom right, rgb(94 234 212 / 22%), transparent 35%);
+  background-attachment: fixed;
+}
+
+section[aria-labelledby="tasks-heading"] {
+  background: linear-gradient(135deg, #ffffff 0%, #faf8ff 100%);
+  border-color: #ddd6fe;
+  box-shadow: 0 24px 60px rgb(79 70 229 / 12%);
+}
+
+main > header > div > p:first-child {
+  color: #0f766e;
+}
+
+html.dark main > header > div > p:first-child {
+  color: #5eead4;
+}
+html.dark main > header p:not(:first-child) {
+  color: #cbd5e1;
+}
+
+html.dark #task-input::placeholder,
+html.dark #search-input::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+html.dark section[aria-labelledby="tasks-heading"] {
+  background: #1e293b;
+  border-color: #475569;
+  box-shadow: 0 24px 60px rgb(0 0 0 / 30%);
+}
