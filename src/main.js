@@ -73,6 +73,7 @@ const FILTER_STORAGE_KEY = 'studySprint.filter';
 let tasks = loadTasks();
 let editingTaskId = null;
 let activeFilter = loadFilter();
+let searchText = '';
 
 const filterNav = document.querySelector('nav[aria-label="Filter tasks"]');
 const taskForm = document.querySelector("#task-form");
@@ -82,6 +83,7 @@ const taskList = document.querySelector("#task-list");
 const taskCount = document.querySelector("#task-count");
 const emptyState = document.querySelector("#empty-state");
 const clearCompletedButton = document.querySelector('#clear-completed');
+const searchInput = document.querySelector('#search-input');
 
 // Load saved tasks, or use an empty array if nothing has been saved yet.
 function loadTasks() {
@@ -192,10 +194,16 @@ for (const button of filterNav.querySelectorAll('[data-filter]')) {
   emptyState.hidden = visibleTasks.length > 0;
 
 if (visibleTasks.length === 0) {
-  emptyState.textContent =
-    tasks.length === 0
-      ? 'A clear desk, a clear mind. Add your first study task to get started.'
-      : `No ${activeFilter} tasks right now.`;
+  const query = searchText.trim();
+
+  if (query.length > 0) {
+    emptyState.textContent = `No tasks match "${query}".`;
+  } else if (tasks.length === 0) {
+    emptyState.textContent =
+      'A clear desk, a clear mind. Add your first study task to get started.';
+  } else {
+    emptyState.textContent = `No ${activeFilter} tasks right now.`;
+  }
 }
 
   const remaining = tasks.filter((task) => !task.completed).length;
@@ -341,17 +349,27 @@ function handleTaskKeydown(event) {
   render();
 }
 
-// Return tasks that match the selected filter.
+// Update the search text whenever the user types.
+function handleSearchInput(event) {
+  searchText = event.target.value;
+  render();
+}
+
+// Return tasks matching the selected filter and search text.
 function getVisibleTasks() {
+  let visibleTasks = tasks;
+
   if (activeFilter === 'active') {
-    return tasks.filter((task) => !task.completed);
+    visibleTasks = visibleTasks.filter((task) => !task.completed);
+  } else if (activeFilter === 'completed') {
+    visibleTasks = visibleTasks.filter((task) => task.completed);
   }
 
-  if (activeFilter === 'completed') {
-    return tasks.filter((task) => task.completed);
-  }
+  const query = searchText.trim().toLowerCase();
 
-  return tasks;
+  return visibleTasks.filter((task) =>
+    task.text.toLowerCase().includes(query)
+  );
 }
 
 // Change the selected filter when a filter button is clicked.
@@ -385,4 +403,5 @@ taskList.addEventListener("click", handleTaskClick);
 taskList.addEventListener('keydown', handleTaskKeydown);
 filterNav.addEventListener('click', handleFilterClick);
 clearCompletedButton.addEventListener('click', clearCompleted);
+searchInput.addEventListener('input', handleSearchInput);
 render();
