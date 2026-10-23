@@ -6,6 +6,10 @@ A focused study task list for organizing work, tracking progress, and keeping ta
 
 [Open StudySprint](https://helpful-tartufo-bebdcf.netlify.app)
 
+## Demo video
+
+[Watch the StudySprint demo](https://drive.google.com/file/d/1LZg-wOrCtLuKU6PHdzY5iJmSPaLIA86E/view?usp=sharing)
+
 ## Features
 
 - Add tasks with input validation
