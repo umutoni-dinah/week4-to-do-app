@@ -68,14 +68,14 @@ document.querySelector("#app").innerHTML = `
     </section>
   </main>
 `;
-const THEME_STORAGE_KEY = 'studySprint.darkMode';
-const TASKS_STORAGE_KEY = 'studySprint.tasks';
-const FILTER_STORAGE_KEY = 'studySprint.filter';
+const THEME_STORAGE_KEY = "studySprint.darkMode";
+const TASKS_STORAGE_KEY = "studySprint.tasks";
+const FILTER_STORAGE_KEY = "studySprint.filter";
 let tasks = loadTasks();
 let editingTaskId = null;
 let activeFilter = loadFilter();
-let searchText = '';
-let isDarkMode = localStorage.getItem(THEME_STORAGE_KEY) === 'true';
+let searchText = "";
+let isDarkMode = localStorage.getItem(THEME_STORAGE_KEY) === "true";
 
 const filterNav = document.querySelector('nav[aria-label="Filter tasks"]');
 const taskForm = document.querySelector("#task-form");
@@ -84,9 +84,9 @@ const formMessage = document.querySelector("#form-message");
 const taskList = document.querySelector("#task-list");
 const taskCount = document.querySelector("#task-count");
 const emptyState = document.querySelector("#empty-state");
-const clearCompletedButton = document.querySelector('#clear-completed');
-const searchInput = document.querySelector('#search-input');
-const themeToggle = document.querySelector('#theme-toggle');
+const clearCompletedButton = document.querySelector("#clear-completed");
+const searchInput = document.querySelector("#search-input");
+const themeToggle = document.querySelector("#theme-toggle");
 
 // Load saved tasks, or use an empty array if nothing has been saved yet.
 function loadTasks() {
@@ -111,16 +111,15 @@ function saveTasks() {
 // Load the saved filter, or use All if it is missing or invalid.
 function loadFilter() {
   const savedFilter = localStorage.getItem(FILTER_STORAGE_KEY);
-  const validFilters = ['all', 'active', 'completed'];
+  const validFilters = ["all", "active", "completed"];
 
-  return validFilters.includes(savedFilter) ? savedFilter : 'all';
+  return validFilters.includes(savedFilter) ? savedFilter : "all";
 }
 
 // Save the currently selected filter in the browser.
 function saveFilter() {
   localStorage.setItem(FILTER_STORAGE_KEY, activeFilter);
 }
-
 
 // Draw the task list and count from the current state.
 function render() {
@@ -157,8 +156,8 @@ function render() {
     const taskText = document.createElement("span");
     taskText.textContent = task.text;
     taskText.className = task.completed
-      ? "text-slate-500 line-through"
-      : "text-slate-800";
+      ? "min-w-0 flex-1 break-words text-slate-500 line-through"
+      : "min-w-0 flex-1 break-words text-slate-800";
 
     const editButton = document.createElement("button");
     editButton.type = "button";
@@ -183,31 +182,31 @@ function render() {
   }
 
   const baseClasses =
-  'rounded-full px-4 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600';
+    "rounded-full px-4 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600";
 
-for (const button of filterNav.querySelectorAll('[data-filter]')) {
-  const isSelected = button.dataset.filter === activeFilter;
+  for (const button of filterNav.querySelectorAll("[data-filter]")) {
+    const isSelected = button.dataset.filter === activeFilter;
 
-  button.setAttribute('aria-pressed', String(isSelected));
-  button.className = isSelected
-    ? `${baseClasses} bg-indigo-100 text-indigo-800`
-    : `${baseClasses} text-slate-600 hover:bg-slate-100`;
-}
+    button.setAttribute("aria-pressed", String(isSelected));
+    button.className = isSelected
+      ? `${baseClasses} bg-indigo-100 text-indigo-800`
+      : `${baseClasses} text-slate-600 hover:bg-slate-100`;
+  }
 
   emptyState.hidden = visibleTasks.length > 0;
 
-if (visibleTasks.length === 0) {
-  const query = searchText.trim();
+  if (visibleTasks.length === 0) {
+    const query = searchText.trim();
 
-  if (query.length > 0) {
-    emptyState.textContent = `No tasks match "${query}".`;
-  } else if (tasks.length === 0) {
-    emptyState.textContent =
-      'A clear desk, a clear mind. Add your first study task to get started.';
-  } else {
-    emptyState.textContent = `No ${activeFilter} tasks right now.`;
+    if (query.length > 0) {
+      emptyState.textContent = `No tasks match "${query}".`;
+    } else if (tasks.length === 0) {
+      emptyState.textContent =
+        "A clear desk, a clear mind. Add your first study task to get started.";
+    } else {
+      emptyState.textContent = `No ${activeFilter} tasks right now.`;
+    }
   }
-}
 
   const remaining = tasks.filter((task) => !task.completed).length;
   const noun = remaining === 1 ? "task" : "tasks";
@@ -260,7 +259,7 @@ function handleTaskChange(event) {
   }
 
   task.completed = checkbox.checked;
-  saveTasks()
+  saveTasks();
   render();
 }
 
@@ -270,7 +269,7 @@ function handleTaskClick(event) {
     return;
   }
 
-  const button = event.target.closest('button[data-action]');
+  const button = event.target.closest("button[data-action]");
 
   if (!button) {
     return;
@@ -282,13 +281,13 @@ function handleTaskClick(event) {
     return;
   }
 
-  if (button.dataset.action === 'edit') {
+  if (button.dataset.action === "edit") {
     editingTaskId = task.id;
     render();
     return;
   }
 
-  if (button.dataset.action !== 'delete') {
+  if (button.dataset.action !== "delete") {
     return;
   }
 
@@ -297,7 +296,7 @@ function handleTaskClick(event) {
   }
 
   tasks = tasks.filter((item) => item.id !== task.id);
-  saveTasks()
+  saveTasks();
   render();
 }
 
@@ -307,19 +306,19 @@ function handleTaskKeydown(event) {
 
   if (
     !(editInput instanceof HTMLInputElement) ||
-    editInput.dataset.action !== 'edit-input'
+    editInput.dataset.action !== "edit-input"
   ) {
     return;
   }
 
-  if (event.key === 'Escape') {
+  if (event.key === "Escape") {
     editingTaskId = null;
-    formMessage.textContent = '';
+    formMessage.textContent = "";
     render();
     return;
   }
 
-  if (event.key !== 'Enter') {
+  if (event.key !== "Enter") {
     return;
   }
 
@@ -328,13 +327,13 @@ function handleTaskKeydown(event) {
   const text = editInput.value.trim();
 
   if (text.length === 0) {
-    formMessage.textContent = 'Task text cannot be empty.';
+    formMessage.textContent = "Task text cannot be empty.";
     editInput.focus();
     return;
   }
 
   if (text.length > 100) {
-    formMessage.textContent = 'Tasks must be 100 characters or fewer.';
+    formMessage.textContent = "Tasks must be 100 characters or fewer.";
     editInput.focus();
     return;
   }
@@ -347,8 +346,8 @@ function handleTaskKeydown(event) {
 
   task.text = text;
   editingTaskId = null;
-  formMessage.textContent = '';
-  saveTasks()
+  formMessage.textContent = "";
+  saveTasks();
   render();
 }
 
@@ -362,27 +361,25 @@ function handleSearchInput(event) {
 function getVisibleTasks() {
   let visibleTasks = tasks;
 
-  if (activeFilter === 'active') {
+  if (activeFilter === "active") {
     visibleTasks = visibleTasks.filter((task) => !task.completed);
-  } else if (activeFilter === 'completed') {
+  } else if (activeFilter === "completed") {
     visibleTasks = visibleTasks.filter((task) => task.completed);
   }
 
   const query = searchText.trim().toLowerCase();
 
-  return visibleTasks.filter((task) =>
-    task.text.toLowerCase().includes(query)
-  );
+  return visibleTasks.filter((task) => task.text.toLowerCase().includes(query));
 }
 
 // Apply the current theme and update the toggle button.
 function applyTheme() {
-  document.documentElement.classList.toggle('dark', isDarkMode);
+  document.documentElement.classList.toggle("dark", isDarkMode);
 
-  themeToggle.textContent = isDarkMode ? 'Light mode' : 'Dark mode';
+  themeToggle.textContent = isDarkMode ? "Light mode" : "Dark mode";
   themeToggle.setAttribute(
-    'aria-label',
-    isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'
+    "aria-label",
+    isDarkMode ? "Switch to light mode" : "Switch to dark mode",
   );
 }
 
@@ -398,21 +395,21 @@ function handleFilterClick(event) {
     return;
   }
 
-  const button = event.target.closest('[data-filter]');
+  const button = event.target.closest("[data-filter]");
 
   if (!button) {
     return;
   }
 
   activeFilter = button.dataset.filter;
-  saveFilter()
+  saveFilter();
   render();
 }
 
 // Remove completed tasks from state, then redraw the list.
 function clearCompleted() {
   tasks = tasks.filter((task) => !task.completed);
-  saveTasks()
+  saveTasks();
   render();
 }
 
@@ -420,10 +417,10 @@ function clearCompleted() {
 taskForm.addEventListener("submit", addTask);
 taskList.addEventListener("change", handleTaskChange);
 taskList.addEventListener("click", handleTaskClick);
-taskList.addEventListener('keydown', handleTaskKeydown);
-filterNav.addEventListener('click', handleFilterClick);
-clearCompletedButton.addEventListener('click', clearCompleted);
-searchInput.addEventListener('input', handleSearchInput);
-themeToggle.addEventListener('click', handleThemeToggle);
+taskList.addEventListener("keydown", handleTaskKeydown);
+filterNav.addEventListener("click", handleFilterClick);
+clearCompletedButton.addEventListener("click", clearCompleted);
+searchInput.addEventListener("input", handleSearchInput);
+themeToggle.addEventListener("click", handleThemeToggle);
 applyTheme();
 render();
